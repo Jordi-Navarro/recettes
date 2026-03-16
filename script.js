@@ -2,16 +2,14 @@ let recettes = [];
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  // Charger les recettes
+  // Charger le JSON
   fetch("recettes.json")
     .then(r => r.json())
     .then(data => {
       recettes = data;
 
-      // Extraire tous les tags uniques
+      // Créer les facettes pour les tags
       const tagsDisponibles = Array.from(new Set(data.flatMap(r => r.tags)));
-
-      // Créer les checkboxes pour les facettes
       const tagFiltersDiv = document.getElementById("tagFilters");
       tagsDisponibles.forEach(tag => {
         const label = document.createElement("label");
@@ -19,15 +17,24 @@ window.addEventListener("DOMContentLoaded", () => {
         tagFiltersDiv.appendChild(label);
       });
 
-      // Activer le bouton aléatoire
-      document.getElementById("random").onclick = () => {
-        afficherRecetteAleatoire();
-      };
+      // Afficher la liste initiale aléatoire
+      afficherListe(filtrerRecettes());
+
+      // Ajouter des écouteurs pour recherche et filtres
+      document.getElementById("searchTitle").addEventListener("input", () => {
+        afficherListe(filtrerRecettes());
+      });
+
+      tagFiltersDiv.querySelectorAll("input[type=checkbox]").forEach(cb => {
+        cb.addEventListener("change", () => {
+          afficherListe(filtrerRecettes());
+        });
+      });
     });
 
 });
 
-// Fonction pour filtrer les recettes selon titre et tags
+// Filtrer selon titre et tags
 function filtrerRecettes() {
   const texte = document.getElementById("searchTitle").value.toLowerCase();
   const checkedTags = Array.from(document.querySelectorAll("#tagFilters input:checked"))
@@ -40,22 +47,38 @@ function filtrerRecettes() {
   });
 }
 
-// Afficher une recette aléatoire
-function afficherRecetteAleatoire() {
-  const listeFiltree = filtrerRecettes();
+// Mélanger un tableau (Fisher-Yates)
+function shuffle(array) {
+  let arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-  if (listeFiltree.length === 0) {
-    document.getElementById("recette").innerHTML = "<p>Aucune recette correspondante</p>";
+// Afficher la liste des recettes
+function afficherListe(liste) {
+  const conteneur = document.getElementById("recetteListe");
+  conteneur.innerHTML = "";
+
+  if (liste.length === 0) {
+    conteneur.innerHTML = "<p>Aucune recette correspondante</p>";
     return;
   }
 
-  const r = listeFiltree[Math.floor(Math.random() * listeFiltree.length)];
+  // Mélanger pour ordre aléatoire
+  const melange = shuffle(liste);
 
-  document.getElementById("recette").innerHTML = `
-    <h2>${r.titre}</h2>
-    <p>Type : ${r.type}</p>
-    <p>Temps : ${r.temps} min</p>
-    <p>Ingrédients : ${r.ingredients.join(", ")}</p>
-    <p>Tags : ${r.tags.join(", ")}</p>
-  `;
+  melange.forEach(r => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <h2>${r.titre}</h2>
+      <p>Type : ${r.type} | Temps : ${r.temps} min</p>
+      <p>Ingrédients : ${r.ingredients.join(", ")}</p>
+      <p>Tags : ${r.tags.join(", ")}</p>
+      <hr>
+    `;
+    conteneur.appendChild(div);
+  });
 }
