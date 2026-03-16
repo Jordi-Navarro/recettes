@@ -1,4 +1,5 @@
 let recettes = [];
+let recettesAffichees = [];
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -12,40 +13,23 @@ window.addEventListener("DOMContentLoaded", () => {
       const tagsDisponibles = Array.from(new Set(data.flatMap(r => r.tags)));
       const tagFiltersDiv = document.getElementById("tagFilters");
       tagsDisponibles.forEach(tag => {
-        const label = document.createElement("label");
-        label.innerHTML = `<input type="checkbox" value="${tag}"> ${tag}`;
-        tagFiltersDiv.appendChild(label);
-      });
+        const bouton = document.createElement("button");
+        bouton.textContent = tag;
+        bouton.style.marginRight = "5px";
 
-      // Afficher la liste initiale aléatoire
-      afficherListe(filtrerRecettes());
-
-      // Ajouter des écouteurs pour recherche et filtres
-      document.getElementById("searchTitle").addEventListener("input", () => {
-        afficherListe(filtrerRecettes());
-      });
-
-      tagFiltersDiv.querySelectorAll("input[type=checkbox]").forEach(cb => {
-        cb.addEventListener("change", () => {
-          afficherListe(filtrerRecettes());
+        bouton.addEventListener("click", () => {
+          ajouterRecettesParTag(tag);
         });
+
+        tagFiltersDiv.appendChild(bouton);
       });
+
+      // Afficher initialement la liste aléatoire
+      recettesAffichees = shuffle(recettes);
+      afficherListe(recettesAffichees);
     });
 
 });
-
-// Filtrer selon titre et tags
-function filtrerRecettes() {
-  const texte = document.getElementById("searchTitle").value.toLowerCase();
-  const checkedTags = Array.from(document.querySelectorAll("#tagFilters input:checked"))
-    .map(cb => cb.value);
-
-  return recettes.filter(r => {
-    const titreOk = r.titre.toLowerCase().includes(texte);
-    const tagsOk = checkedTags.length === 0 || checkedTags.some(tag => r.tags.includes(tag));
-    return titreOk && tagsOk;
-  });
-}
 
 // Mélanger un tableau (Fisher-Yates)
 function shuffle(array) {
@@ -55,6 +39,13 @@ function shuffle(array) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+// Ajouter les recettes correspondant à un tag
+function ajouterRecettesParTag(tag) {
+  const nouvelles = recettes.filter(r => r.tags.includes(tag) && !recettesAffichees.includes(r));
+  recettesAffichees = recettesAffichees.concat(nouvelles);
+  afficherListe(recettesAffichees);
 }
 
 // Afficher la liste des recettes
@@ -67,10 +58,7 @@ function afficherListe(liste) {
     return;
   }
 
-  // Mélanger pour ordre aléatoire
-  const melange = shuffle(liste);
-
-  melange.forEach(r => {
+  liste.forEach(r => {
     const div = document.createElement("div");
     div.innerHTML = `
       <h2>${r.titre}</h2>
