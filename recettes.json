@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "titre": "Omelette",
+    "type": "plat",
+    "temps": 10,
+    "ingredients": ["oeufs", "beurre"]
+  },
+  {
+    "id": 2,
+    "titre": "Salade tomate",
+    "type": "entrée",
+    "temps": 5,
+    "ingredients": ["tomate", "huile d'olive"]
+  }
+]
