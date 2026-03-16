@@ -42,7 +42,7 @@ function filtrerRecettes() {
 
   return recettes.filter(r => {
     const titreOk = r.titre.toLowerCase().includes(texte);
-    const tagsOk = checkedTags.every(tag => r.tags.includes(tag));
+    const tagsOk = checkedTags.length === 0 || checkedTags.some(tag => r.tags.includes(tag));
     return titreOk && tagsOk;
   });
 }
