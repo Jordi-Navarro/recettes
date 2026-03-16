@@ -1,31 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Mes recettes</title>
-<link rel="stylesheet" href="style.css">
-</head>
-
 <body>
+  <h1>Que mange-t-on ?</h1>
 
-<h1>Que mange-t-on ?</h1>
+  <!-- Recherche sur le titre -->
+  <label for="searchTitle">Rechercher un titre :</label>
+  <input type="text" id="searchTitle" placeholder="ex : omelette">
 
-<!-- Champ de recherche sur le titre -->
-<label for="searchTitle">Rechercher un titre :</label>
-<input type="text" id="searchTitle" placeholder="ex : omelette">
+  <!-- Facettes pour les tags -->
+  <div id="tagFilters">
+    <h3>Filtrer par tags :</h3>
+    <!-- Les checkboxes seront générées automatiquement -->
+  </div>
 
-<!-- Filtrage par tags -->
-<div id="tagFilters">
-  <h3>Filtrer par tags :</h3>
-  <!-- Les cases à cocher seront générées automatiquement -->
-</div>
+  <!-- Zone pour afficher la liste des recettes -->
+  <div id="recetteListe"></div>
 
-<!-- Bouton pour recette aléatoire (après filtrage) -->
-<button id="random">🎲 Recette aléatoire</button>
-
-<!-- Zone d'affichage -->
-<div id="recette"></div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
-</html>
