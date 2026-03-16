@@ -2,6 +2,7 @@ let recettes = [];
 
 window.addEventListener("DOMContentLoaded", () => {
 
+  // Charger les recettes
   fetch("recettes.json")
     .then(r => r.json())
     .then(data => {
@@ -29,18 +30,12 @@ window.addEventListener("DOMContentLoaded", () => {
 // Fonction pour filtrer les recettes selon titre et tags
 function filtrerRecettes() {
   const texte = document.getElementById("searchTitle").value.toLowerCase();
-
-  // tags sélectionnés
   const checkedTags = Array.from(document.querySelectorAll("#tagFilters input:checked"))
     .map(cb => cb.value);
 
   return recettes.filter(r => {
-    // filtre sur le titre
     const titreOk = r.titre.toLowerCase().includes(texte);
-
-    // filtre sur les tags
     const tagsOk = checkedTags.every(tag => r.tags.includes(tag));
-
     return titreOk && tagsOk;
   });
 }
