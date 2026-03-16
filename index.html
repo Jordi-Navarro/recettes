@@ -3,17 +3,29 @@
 <head>
 <meta charset="utf-8">
 <title>Mes recettes</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <h1>Que mange-t-on ?</h1>
 
-<button id="random">Recette aléatoire</button>
+<!-- Champ de recherche sur le titre -->
+<label for="searchTitle">Rechercher un titre :</label>
+<input type="text" id="searchTitle" placeholder="ex : omelette">
 
+<!-- Filtrage par tags -->
+<div id="tagFilters">
+  <h3>Filtrer par tags :</h3>
+  <!-- Les cases à cocher seront générées automatiquement -->
+</div>
+
+<!-- Bouton pour recette aléatoire (après filtrage) -->
+<button id="random">🎲 Recette aléatoire</button>
+
+<!-- Zone d'affichage -->
 <div id="recette"></div>
 
 <script src="script.js"></script>
-
 </body>
 </html>

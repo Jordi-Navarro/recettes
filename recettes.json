@@ -1,16 +1,44 @@
 [
   {
     "id": 1,
-    "titre": "Omelette",
+    "titre": "Lasagnes",
     "type": "plat",
-    "temps": 10,
-    "ingredients": ["oeufs", "beurre"]
+    "temps": 60,
+    "ingredients": [
+      "boeuf",
+      "tomate",
+      "pates"
+    ],
+    "tags": [
+      "italien",
+      "four"
+    ]
   },
   {
     "id": 2,
-    "titre": "Salade tomate",
-    "type": "entrée",
-    "temps": 5,
-    "ingredients": ["tomate", "huile d'olive"]
+    "titre": "Omelette",
+    "type": "plat",
+    "temps": 10,
+    "ingredients": [
+      "oeuf",
+      "beurre"
+    ],
+    "tags": [
+      "rapide"
+    ]
+  },
+  {
+    "id": 3,
+    "titre": "Tarte aux pommes",
+    "type": "dessert",
+    "temps": 45,
+    "ingredients": [
+      "pomme",
+      "sucre",
+      "pate"
+    ],
+    "tags": [
+      "classic"
+    ]
   }
 ]
