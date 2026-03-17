@@ -84,5 +84,9 @@ function afficherListe(liste) {
   });
 }
 document.getElementById("tagFilters").addEventListener("click", (e) => {
-  console.log("clic détecté", e.target);
+  const bouton = e.target.closest("button");
+  if (bouton) {
+    console.log("clic sur tag :", bouton.textContent);
+    ajouterRecettesParTag(bouton.textContent);
+  }
 });
