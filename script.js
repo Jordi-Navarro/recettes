@@ -83,6 +83,6 @@ function afficherListe(liste) {
     conteneur.appendChild(div);
   });
 }
-document.getElementById("searchTitle").addEventListener("input", () => {
-  console.log("ça tape !");
+document.getElementById("tagFilters").addEventListener("click", (e) => {
+  console.log("clic détecté", e.target);
 });
