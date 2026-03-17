@@ -1,66 +1,48 @@
-// --- JSON interne pour tester ---
-let recettes = [
-  { 
-    "titre":"Pizza", 
-    "type":"plat", 
-    "temps":20, 
-    "ingredients":["farine","tomate","fromage"], 
-    "tags":["italien","four"] 
-  },
-  { 
-    "titre":"Omelette", 
-    "type":"plat", 
-    "temps":10, 
-    "ingredients":["oeufs","sel","beurre"], 
-    "tags":["rapide"] 
-  },
-  { 
-    "titre":"Salade César", 
-    "type":"entrée", 
-    "temps":15, 
-    "ingredients":["laitue","poulet","parmesan"], 
-    "tags":["rapide","fraîche"] 
-  }
-];
-
+let recettes = [];
 let recettesAffichees = []; // tableau des recettes affichées
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  // --- Créer les boutons pour chaque tag ---
-  const tagsDisponibles = Array.from(new Set(recettes.flatMap(r => r.tags)));
-  const tagFiltersDiv = document.getElementById("tagFilters");
+  // --- Charger le JSON ---
+  fetch("recettes.json")
+    .then(r => r.json())
+    .then(data => {
+      recettes = data;
 
-  tagsDisponibles.forEach(tag => {
-    const bouton = document.createElement("button");
-    bouton.textContent = tag;
-    tagFiltersDiv.appendChild(bouton);
-  });
+      // --- Générer les boutons de tags ---
+      const tagsDisponibles = Array.from(new Set(recettes.flatMap(r => r.tags)));
+      const tagFiltersDiv = document.getElementById("tagFilters");
 
-  // --- Clic sur un tag (OR cumulatif) ---
-  tagFiltersDiv.addEventListener("click", (e) => {
-    const bouton = e.target.closest("button");
-    if (bouton) {
-      ajouterRecettesParTag(bouton.textContent.trim());
-    }
-  });
+      tagsDisponibles.forEach(tag => {
+        const bouton = document.createElement("button");
+        bouton.textContent = tag;
+        tagFiltersDiv.appendChild(bouton);
+      });
 
-  // --- Recherche sur le titre ---
-  document.getElementById("searchTitle").addEventListener("input", () => {
-    afficherListe(filtrerRecettes());
-  });
+      // --- Clic sur les tags (accumulation OR) ---
+      tagFiltersDiv.addEventListener("click", e => {
+        const bouton = e.target.closest("button");
+        if (bouton) ajouterRecettesParTag(bouton.textContent.trim());
+      });
 
-  // --- Affichage initial aléatoire ---
-  recettesAffichees = shuffle(recettes); // on commence avec toutes les recettes mélangées
-  afficherListe(recettesAffichees);
+      // --- Recherche sur le titre ---
+      document.getElementById("searchTitle").addEventListener("input", () => {
+        afficherListe(filtrerRecettes());
+      });
+
+      // --- Affichage initial aléatoire ---
+      recettesAffichees = shuffle(recettes);
+      afficherListe(recettesAffichees);
+    })
+    .catch(err => console.error("Erreur chargement JSON :", err));
 
 });
 
 // --- Mélanger un tableau (Fisher-Yates) ---
 function shuffle(array) {
-  let arr = array.slice();
+  const arr = array.slice();
   for (let i = arr.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
@@ -70,8 +52,7 @@ function shuffle(array) {
 function ajouterRecettesParTag(tag) {
   const tagMin = tag.toLowerCase().trim();
 
-  // nouvelles recettes qui contiennent le tag et pas déjà affichées
-  const nouvelles = recettes.filter(r => 
+  const nouvelles = recettes.filter(r =>
     r.tags.map(t => t.toLowerCase().trim()).includes(tagMin) &&
     !recettesAffichees.some(a => a.titre.toLowerCase().trim() === r.titre.toLowerCase().trim())
   );
