@@ -1,5 +1,5 @@
 let recettes = [];
-let recettesAffichees = [];
+let recettesAffichees = []; // Tableau des recettes actuellement affichées
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -7,12 +7,8 @@ window.addEventListener("DOMContentLoaded", () => {
   fetch("recettes.json")
     .then(r => r.json())
     .then(data => {
-      recettes = data;
-      
-// Après avoir chargé le JSON
-recettesAffichees = []; // Commence vide
-afficherListe(shuffle(recettes)); // Affichage initial aléatoire
-      
+      recettes = data; // Toutes les recettes
+
       // Créer les boutons pour chaque tag
       const tagsDisponibles = Array.from(new Set(data.flatMap(r => r.tags)));
       const tagFiltersDiv = document.getElementById("tagFilters");
@@ -23,7 +19,7 @@ afficherListe(shuffle(recettes)); // Affichage initial aléatoire
         tagFiltersDiv.appendChild(bouton);
       });
 
-      // Event delegation pour accumulation par tag
+      // Event delegation : tous les clics sur les boutons
       tagFiltersDiv.addEventListener("click", (e) => {
         const bouton = e.target.closest("button");
         if (bouton) {
@@ -36,10 +32,11 @@ afficherListe(shuffle(recettes)); // Affichage initial aléatoire
         afficherListe(filtrerRecettes());
       });
 
-      // Affichage initial aléatoire
-      recettesAffichees = shuffle(recettes);
+      // Affichage initial aléatoire (shuffle)
+      recettesAffichees = shuffle(recettes); // Commence avec toutes les recettes mélangées
       afficherListe(recettesAffichees);
-    });
+    })
+    .catch(err => console.error("Erreur chargement JSON :", err));
 
 });
 
@@ -53,20 +50,26 @@ function shuffle(array) {
   return arr;
 }
 
-// Ajouter les recettes correspondant à un tag (accumulation)
+// Ajouter les recettes correspondant à un tag (accumulation OR cumulatif)
 function ajouterRecettesParTag(tag) {
   const tagMin = tag.toLowerCase().trim();
+
+  // On prend les recettes qui contiennent le tag et qui ne sont pas déjà affichées
   const nouvelles = recettes.filter(r => 
     r.tags.map(t => t.toLowerCase().trim()).includes(tagMin) &&
     !recettesAffichees.some(a => a.titre.toLowerCase().trim() === r.titre.toLowerCase().trim())
   );
+
+  // Accumulation
   recettesAffichees = recettesAffichees.concat(nouvelles);
+
+  // Réaffichage
   afficherListe(recettesAffichees);
 }
 
-// Filtrer selon titre sur les recettes affichées
+// Filtrer selon le titre sur les recettes affichées
 function filtrerRecettes() {
-  const texte = document.getElementById("searchTitle").value.toLowerCase();
+  const texte = document.getElementById("searchTitle").value.toLowerCase().trim();
   return recettesAffichees.filter(r => r.titre.toLowerCase().includes(texte));
 }
 
