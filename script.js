@@ -9,22 +9,29 @@ window.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       recettes = data;
 
-      // Créer les facettes pour les tags
+      // Créer les boutons pour chaque tag
       const tagsDisponibles = Array.from(new Set(data.flatMap(r => r.tags)));
       const tagFiltersDiv = document.getElementById("tagFilters");
+
       tagsDisponibles.forEach(tag => {
         const bouton = document.createElement("button");
         bouton.textContent = tag;
-        bouton.style.marginRight = "5px";
-
-        bouton.addEventListener("click", () => {
-          ajouterRecettesParTag(tag);
-        });
-
         tagFiltersDiv.appendChild(bouton);
       });
 
-      // Afficher initialement la liste aléatoire
+      // Event delegation pour accumulation par tag
+      tagFiltersDiv.addEventListener("click", (e) => {
+        if (e.target.tagName === "BUTTON") {
+          ajouterRecettesParTag(e.target.textContent);
+        }
+      });
+
+      // Recherche sur le titre
+      document.getElementById("searchTitle").addEventListener("input", () => {
+        afficherListe(filtrerRecettes());
+      });
+
+      // Affichage initial aléatoire
       recettesAffichees = shuffle(recettes);
       afficherListe(recettesAffichees);
     });
@@ -41,11 +48,17 @@ function shuffle(array) {
   return arr;
 }
 
-// Ajouter les recettes correspondant à un tag
+// Ajouter les recettes correspondant à un tag (accumulation)
 function ajouterRecettesParTag(tag) {
   const nouvelles = recettes.filter(r => r.tags.includes(tag) && !recettesAffichees.includes(r));
   recettesAffichees = recettesAffichees.concat(nouvelles);
   afficherListe(recettesAffichees);
+}
+
+// Filtrer selon titre sur les recettes affichées
+function filtrerRecettes() {
+  const texte = document.getElementById("searchTitle").value.toLowerCase();
+  return recettesAffichees.filter(r => r.titre.toLowerCase().includes(texte));
 }
 
 // Afficher la liste des recettes
