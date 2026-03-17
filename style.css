@@ -17,10 +17,15 @@ h1 {
   margin: 10px 0 20px 0;
   border-radius: 5px;
   border: 1px solid #ccc;
+  position: relative;
+  z-index: 10;
 }
 
 #tagFilters {
   margin-bottom: 20px;
+  position: relative;
+  z-index: 11;
+  pointer-events: auto;
 }
 
 #tagFilters button {
