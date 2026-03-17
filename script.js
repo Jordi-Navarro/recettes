@@ -32,7 +32,7 @@ afficherListe(recettesAffichees);
       afficherListe(recettesAffichees);
     });
 
-});
+);
 
 // Mélanger un tableau (Fisher-Yates)
 function shuffle(array) {
