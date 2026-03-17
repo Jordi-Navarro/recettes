@@ -8,7 +8,11 @@ window.addEventListener("DOMContentLoaded", () => {
     .then(r => r.json())
     .then(data => {
       recettes = data;
-
+      
+// Après avoir chargé le JSON
+recettesAffichees = []; // Commence vide
+afficherListe(shuffle(recettes)); // Affichage initial aléatoire
+      
       // Créer les boutons pour chaque tag
       const tagsDisponibles = Array.from(new Set(data.flatMap(r => r.tags)));
       const tagFiltersDiv = document.getElementById("tagFilters");
@@ -51,9 +55,10 @@ function shuffle(array) {
 
 // Ajouter les recettes correspondant à un tag (accumulation)
 function ajouterRecettesParTag(tag) {
+  const tagMin = tag.toLowerCase().trim();
   const nouvelles = recettes.filter(r => 
-    r.tags.includes(tag) &&
-    !recettesAffichees.some(a => a.titre === r.titre)
+    r.tags.map(t => t.toLowerCase().trim()).includes(tagMin) &&
+    !recettesAffichees.some(a => a.titre.toLowerCase().trim() === r.titre.toLowerCase().trim())
   );
   recettesAffichees = recettesAffichees.concat(nouvelles);
   afficherListe(recettesAffichees);
