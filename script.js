@@ -21,8 +21,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // Event delegation pour accumulation par tag
       tagFiltersDiv.addEventListener("click", (e) => {
-        if (e.target.tagName === "BUTTON") {
-          ajouterRecettesParTag(e.target.textContent);
+        const bouton = e.target.closest("button");
+        if (bouton) {
+          ajouterRecettesParTag(bouton.textContent.trim());
         }
       });
 
@@ -50,7 +51,10 @@ function shuffle(array) {
 
 // Ajouter les recettes correspondant à un tag (accumulation)
 function ajouterRecettesParTag(tag) {
-  const nouvelles = recettes.filter(r => r.tags.includes(tag) && !recettesAffichees.includes(r));
+  const nouvelles = recettes.filter(r => 
+    r.tags.includes(tag) &&
+    !recettesAffichees.some(a => a.titre === r.titre)
+  );
   recettesAffichees = recettesAffichees.concat(nouvelles);
   afficherListe(recettesAffichees);
 }
@@ -83,10 +87,3 @@ function afficherListe(liste) {
     conteneur.appendChild(div);
   });
 }
-document.getElementById("tagFilters").addEventListener("click", (e) => {
-  const bouton = e.target.closest("button");
-  if (bouton) {
-    console.log("clic sur tag :", bouton.textContent);
-    ajouterRecettesParTag(bouton.textContent);
-  }
-});
