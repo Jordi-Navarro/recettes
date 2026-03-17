@@ -5,10 +5,12 @@ let recettesAffichees = [];
 window.addEventListener("DOMContentLoaded", () => {
 
   // Charger le JSON
-  fetch("recettes.json")
-    .then(r => r.json())
-    .then(data => {
-      recettes = data;
+  let recettes = [
+  { "titre":"Pizza","type":"plat","temps":20,"ingredients":["farine","tomate","fromage"],"tags":["italien","four"] },
+  { "titre":"Omelette","type":"plat","temps":10,"ingredients":["oeufs","sel","beurre"],"tags":["rapide"] }
+];
+let recettesAffichees = recettes.slice();
+afficherListe(recettesAffichees);
 
       // Créer les facettes pour les tags
       const tagsDisponibles = Array.from(new Set(data.flatMap(r => r.tags)));
